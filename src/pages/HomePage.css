@@ -1,0 +1,116 @@
+.home-page {
+  padding-top: 64px;
+}
+
+/* ─── Hero ─── */
+.hero {
+  background: linear-gradient(135deg, var(--color-primary) 0%, #2a5a84 100%);
+  color: white;
+  padding: 80px 0 100px;
+}
+
+.hero-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 24px;
+}
+
+.hero-title {
+  font-size: clamp(2rem, 5vw, 3rem);
+  font-weight: 800;
+  line-height: 1.15;
+  max-width: 680px;
+}
+
+.hero-accent {
+  color: var(--color-accent);
+}
+
+.hero-subtitle {
+  font-size: 1.1rem;
+  opacity: 0.85;
+  max-width: 540px;
+  line-height: 1.6;
+}
+
+.hero-search {
+  display: flex;
+  gap: 0;
+  width: 100%;
+  max-width: 560px;
+  box-shadow: var(--shadow-lg);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+}
+
+.hero-search-input {
+  border-radius: 0;
+  border: none;
+  flex: 1;
+  font-size: 1rem;
+  padding: 14px 20px;
+}
+
+.hero-search .btn {
+  border-radius: 0;
+  flex-shrink: 0;
+}
+
+.hero-stats {
+  display: flex;
+  gap: 48px;
+  margin-top: 8px;
+}
+
+.hero-stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.hero-stat-value {
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: var(--color-accent);
+}
+
+.hero-stat-label {
+  font-size: 0.85rem;
+  opacity: 0.75;
+}
+
+/* ─── Featured ─── */
+.featured-section {
+  padding: 64px 0;
+}
+
+/* ─── CTA ─── */
+.cta-section {
+  background: var(--color-surface);
+  border-top: 1px solid var(--color-border);
+  padding: 64px 0;
+}
+
+.cta-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 32px;
+  flex-wrap: wrap;
+}
+
+.cta-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--color-text);
+  margin-bottom: 8px;
+}
+
+.cta-desc {
+  font-size: 0.95rem;
+  color: var(--color-text-muted);
+  max-width: 500px;
+}

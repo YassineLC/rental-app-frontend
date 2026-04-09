@@ -1,0 +1,112 @@
+.property-card {
+  display: flex;
+  flex-direction: column;
+  transition: box-shadow var(--transition), transform var(--transition);
+}
+
+.property-card:hover {
+  box-shadow: var(--shadow-md);
+  transform: translateY(-2px);
+}
+
+.property-card-image {
+  position: relative;
+  height: 200px;
+  background: var(--color-border);
+  overflow: hidden;
+}
+
+.property-card-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.property-card-placeholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #e2e8f0, #cbd5e1);
+  font-size: 3rem;
+  color: #94a3b8;
+}
+
+.property-status-badge {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+}
+
+.property-type-badge {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+}
+
+.property-card-body {
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  flex: 1;
+}
+
+.property-card-title {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--color-text);
+  line-height: 1.3;
+}
+
+.property-card-city {
+  font-size: 0.85rem;
+  color: var(--color-text-muted);
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.location-icon {
+  color: var(--color-accent);
+  font-size: 0.6rem;
+}
+
+.property-card-meta {
+  display: flex;
+  gap: 12px;
+  font-size: 0.8rem;
+  color: var(--color-text-muted);
+}
+
+.property-card-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: auto;
+  padding-top: 12px;
+  border-top: 1px solid var(--color-border);
+}
+
+.property-price {
+  display: flex;
+  align-items: baseline;
+  gap: 3px;
+}
+
+.price-amount {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--color-primary);
+}
+
+.price-period {
+  font-size: 0.8rem;
+  color: var(--color-text-muted);
+}
+
+.property-card-actions {
+  display: flex;
+  gap: 8px;
+}
