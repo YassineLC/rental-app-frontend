@@ -30,11 +30,12 @@ export default function HomePage() {
       {/* Hero */}
       <section className="hero">
         <div className="container hero-content">
+          <span className="hero-eyebrow">Location en France</span>
           <h1 className="hero-title">
             Trouvez votre <span className="hero-accent">logement idéal</span>
           </h1>
           <p className="hero-subtitle">
-            Des milliers de biens disponibles partout en France. Appartements, maisons, studios et plus.
+            Appartements, maisons, studios — des milliers d'annonces vérifiées partout en France.
           </p>
 
           <form className="hero-search" onSubmit={handleSearch}>
@@ -101,8 +102,9 @@ export default function HomePage() {
       <section className="cta-section">
         <div className="container cta-inner">
           <div className="cta-text">
-            <h2 className="cta-title">Vous êtes propriétaire ?</h2>
-            <p className="cta-desc">Mettez votre bien en location facilement et gérez vos réservations en temps réel.</p>
+            <p className="cta-overline">Propriétaires</p>
+            <h2 className="cta-title">Louez votre bien en quelques clics</h2>
+            <p className="cta-desc">Publiez une annonce, gérez vos demandes et confirmez vos réservations — tout depuis votre tableau de bord.</p>
           </div>
           <Link to="/register" className="btn btn-accent btn-lg">
             Proposer un logement

@@ -38,7 +38,9 @@ export default function Navbar() {
               </NavLink>
               <div className="navbar-user">
                 <span className="user-name">{user.firstName}</span>
-                <span className={`role-badge role-${user.role.toLowerCase()}`}>{user.role}</span>
+                <span className={`role-badge role-${user.role.toLowerCase()}`}>
+                  {user.role === 'TENANT' ? 'Locataire' : user.role === 'OWNER' ? 'Propriétaire' : 'Admin'}
+                </span>
                 <button onClick={handleLogout} className="btn btn-ghost btn-sm">
                   Déconnexion
                 </button>

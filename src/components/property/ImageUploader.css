@@ -1,0 +1,133 @@
+.image-uploader {
+  width: 100%;
+}
+
+/* ─── Drop zone ─── */
+.uploader-zone {
+  width: 100%;
+  border: 2px dashed var(--color-border);
+  border-radius: var(--radius-md);
+  padding: 36px 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  cursor: pointer;
+  transition: border-color var(--transition), background var(--transition);
+  background: var(--color-bg);
+  text-align: center;
+}
+
+.uploader-zone:hover,
+.uploader-zone.drag-over {
+  border-color: var(--color-primary);
+  background: rgba(15, 43, 70, 0.03);
+}
+
+.uploader-icon {
+  color: var(--color-text-muted);
+  opacity: 0.6;
+}
+
+.uploader-text {
+  font-size: 0.9rem;
+  color: var(--color-text-muted);
+}
+
+.uploader-link {
+  color: var(--color-primary);
+  font-weight: 600;
+  text-decoration: underline;
+  text-decoration-color: transparent;
+  transition: text-decoration-color var(--transition);
+}
+
+.uploader-zone:hover .uploader-link {
+  text-decoration-color: currentColor;
+}
+
+.uploader-hint {
+  font-size: 0.78rem;
+  color: #b0aca4;
+}
+
+.uploader-uploading {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: var(--color-text-muted);
+  font-size: 0.875rem;
+}
+
+/* ─── Preview ─── */
+.uploader-preview {
+  position: relative;
+  width: 100%;
+  height: 220px;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  background: var(--color-border);
+}
+
+.uploader-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.uploader-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  opacity: 0;
+  transition: opacity var(--transition);
+}
+
+.uploader-preview:hover .uploader-overlay {
+  opacity: 1;
+}
+
+.uploader-change-btn,
+.uploader-remove-btn {
+  padding: 8px 16px;
+  border: none;
+  border-radius: var(--radius-sm);
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: var(--font);
+  transition: background var(--transition);
+}
+
+.uploader-change-btn {
+  background: white;
+  color: var(--color-text);
+}
+
+.uploader-change-btn:hover {
+  background: #f4f3ef;
+}
+
+.uploader-remove-btn {
+  background: var(--color-danger);
+  color: white;
+}
+
+.uploader-remove-btn:hover {
+  background: #a93226;
+}
+
+.uploader-loading {
+  position: absolute;
+  inset: 0;
+  background: rgba(255, 255, 255, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

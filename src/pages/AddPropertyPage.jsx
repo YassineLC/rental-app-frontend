@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { propertyService } from '../services/propertyService';
+import ImageUploader from '../components/property/ImageUploader';
 import './AddPropertyPage.css';
 
 const TYPES = [
@@ -141,10 +142,12 @@ export default function AddPropertyPage({ editMode = false, initialData = null, 
                     onChange={handleChange} placeholder="3" min="1" />
                 </div>
 
-                <div className="form-group">
-                  <label className="form-label">URL image</label>
-                  <input name="imageUrl" type="url" className="form-input" value={form.imageUrl}
-                    onChange={handleChange} placeholder="https://..." />
+                <div className="form-group" style={{ gridColumn: '1 / -1' }}>
+                  <label className="form-label">Photo du logement</label>
+                  <ImageUploader
+                    value={form.imageUrl}
+                    onChange={(url) => setForm((f) => ({ ...f, imageUrl: url }))}
+                  />
                 </div>
               </div>
 
