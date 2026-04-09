@@ -5,6 +5,7 @@
 
 .property-form-wrapper {
   max-width: 720px;
+  margin: 0 auto;
 }
 
 .property-form {
