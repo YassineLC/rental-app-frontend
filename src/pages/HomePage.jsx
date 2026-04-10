@@ -8,13 +8,14 @@ import './HomePage.css';
 export default function HomePage() {
   const [featured, setFeatured] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [loadError, setLoadError] = useState('');
   const [searchCity, setSearchCity] = useState('');
   const navigate = useNavigate();
 
   useEffect(() => {
     propertyService.getAll()
       .then((data) => setFeatured(data.slice(0, 6)))
-      .catch(() => {})
+      .catch(() => setLoadError('Impossible de charger les logements du moment.'))
       .finally(() => setLoading(false));
   }, []);
 
@@ -80,6 +81,8 @@ export default function HomePage() {
               Voir tout
             </Link>
           </div>
+
+          {loadError && <div className="alert alert-error mb-24">{loadError}</div>}
 
           {loading ? (
             <LoadingSpinner />

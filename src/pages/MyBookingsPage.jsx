@@ -85,6 +85,7 @@ function BookingTimeline({ booking }) {
 export default function MyBookingsPage() {
   const [bookings, setBookings] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [loadError, setLoadError] = useState('');
   const [cancellingId, setCancellingId] = useState(null);
   const [error, setError] = useState('');
   const [filter, setFilter] = useState('all');
@@ -92,7 +93,7 @@ export default function MyBookingsPage() {
   useEffect(() => {
     bookingService.getMyBookings()
       .then(setBookings)
-      .catch(() => {})
+      .catch(() => setLoadError('Impossible de charger vos réservations.'))
       .finally(() => setLoading(false));
   }, []);
 
@@ -136,6 +137,7 @@ export default function MyBookingsPage() {
         </div>
 
         {error && <div className="alert alert-error">{error}</div>}
+        {loadError && <div className="alert alert-error">{loadError}</div>}
 
         {/* Filtres */}
         {bookings.length > 0 && (

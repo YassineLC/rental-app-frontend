@@ -27,6 +27,7 @@ export default function TenantDashboardPage() {
   const { user } = useAuth();
   const [bookings, setBookings] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [loadError, setLoadError] = useState('');
   const [cancellingId, setCancellingId] = useState(null);
   const [error, setError] = useState('');
   const [filter, setFilter] = useState('all');
@@ -34,7 +35,7 @@ export default function TenantDashboardPage() {
   useEffect(() => {
     bookingService.getMyBookings()
       .then(setBookings)
-      .catch(() => {})
+      .catch(() => setLoadError('Impossible de charger votre tableau de bord.'))
       .finally(() => setLoading(false));
   }, []);
 
@@ -91,6 +92,7 @@ export default function TenantDashboardPage() {
         </div>
 
         {error && <div className="alert alert-error">{error}</div>}
+        {loadError && <div className="alert alert-error">{loadError}</div>}
 
         <div className="bookings-section-header">
           <h2 className="section-title" style={{ fontSize: '1.15rem' }}>Mes réservations</h2>

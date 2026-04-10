@@ -20,6 +20,7 @@ export default function PropertyDetailPage() {
 
   const [property, setProperty] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [pageError, setPageError] = useState('');
   const [unavailablePeriods, setUnavailablePeriods] = useState([]);
   const [bookingForm, setBookingForm] = useState({ startDate: '', endDate: '', message: '' });
   const [bookingError, setBookingError] = useState('');
@@ -29,11 +30,11 @@ export default function PropertyDetailPage() {
   useEffect(() => {
     propertyService.getById(id)
       .then(p => { setProperty(p); return p; })
-      .catch(() => navigate('/properties'))
+      .catch(() => setPageError('Impossible de charger le logement demandé.'))
       .finally(() => setLoading(false));
     bookingService.getUnavailablePeriods(id)
       .then(setUnavailablePeriods)
-      .catch(() => {});
+      .catch(() => setBookingError('Impossible de charger les disponibilités.'));
   }, [id, navigate]);
 
   const handleBookingChange = (e) => {
@@ -80,6 +81,21 @@ export default function PropertyDetailPage() {
     : null;
 
   if (loading) return <LoadingSpinner fullPage />;
+  if (pageError) {
+    return (
+      <div className="property-detail-page page">
+        <div className="container">
+          <div className="empty-state">
+            <h3>Logement indisponible</h3>
+            <p>{pageError}</p>
+            <Link to="/properties" className="btn btn-primary mt-16">
+              Retour aux logements
+            </Link>
+          </div>
+        </div>
+      </div>
+    );
+  }
   if (!property) return null;
 
   const today = new Date().toISOString().split('T')[0];

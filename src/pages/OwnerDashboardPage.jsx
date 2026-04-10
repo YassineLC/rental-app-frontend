@@ -27,13 +27,14 @@ export default function OwnerDashboardPage() {
   const [bookings, setBookings] = useState([]);
   const [tab, setTab] = useState('properties');
   const [loading, setLoading] = useState(true);
+  const [loadError, setLoadError] = useState('');
   const [actionId, setActionId] = useState(null);
   const [error, setError] = useState('');
 
   useEffect(() => {
     Promise.all([propertyService.getMyProperties(), bookingService.getOwnerRequests()])
       .then(([props, books]) => { setProperties(props); setBookings(books); })
-      .catch(() => {})
+      .catch(() => setLoadError('Impossible de charger vos logements ou vos réservations.'))
       .finally(() => setLoading(false));
   }, []);
 
@@ -111,6 +112,8 @@ export default function OwnerDashboardPage() {
             <span className="stat-label">Disponibles</span>
           </div>
         </div>
+
+        {loadError && <div className="alert alert-error">{loadError}</div>}
 
         {error && <div className="alert alert-error">{error}</div>}
 
