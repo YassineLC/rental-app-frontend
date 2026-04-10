@@ -9,6 +9,7 @@ import './DashboardPage.css';
 const STATUS_CONFIG = {
   PENDING:   { label: 'En attente',  cls: 'badge-yellow' },
   CONFIRMED: { label: 'Confirmée',   cls: 'badge-green'  },
+  ACTIVE:    { label: 'En cours',    cls: 'badge-blue'   },
   CANCELLED: { label: 'Annulée',     cls: 'badge-red'    },
   COMPLETED: { label: 'Terminée',    cls: 'badge-gray'   },
 };

@@ -155,3 +155,200 @@
   justify-content: space-between;
   align-items: center;
 }
+
+/* ── Redesigned booking card v2 ──────────────────────────── */
+.booking-card-v2 {
+  display: flex;
+  padding: 0;
+  overflow: hidden;
+  transition: box-shadow 0.18s, transform 0.18s;
+}
+.booking-card-v2:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 24px rgba(0,0,0,0.09);
+}
+
+.booking-card-v2--active {
+  box-shadow: 0 0 0 2px rgba(59,130,246,0.25);
+}
+.booking-card-v2--active:hover {
+  box-shadow: 0 6px 24px rgba(59,130,246,0.18);
+}
+
+.bcard-accent {
+  width: 5px;
+  flex-shrink: 0;
+  background: var(--accent, var(--color-border));
+  border-radius: 4px 0 0 4px;
+}
+
+.bcard-body {
+  flex: 1;
+  padding: 20px 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.bcard-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.bcard-property { flex: 1; min-width: 0; }
+
+.bcard-title {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--color-text);
+  margin-bottom: 4px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.bcard-city {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 0.82rem;
+  color: var(--color-text-muted);
+}
+
+/* Date range */
+.bcard-dates {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: var(--color-bg);
+  border-radius: var(--radius-sm);
+  padding: 12px 16px;
+}
+
+.bcard-date-block {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.bcard-date-label {
+  font-size: 0.68rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--color-text-muted);
+}
+
+.bcard-date-value {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+.bcard-nights {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--color-text-muted);
+  border-left: 1px dashed var(--color-border);
+  border-right: 1px dashed var(--color-border);
+  padding: 0 12px;
+}
+
+/* Bottom row */
+.bcard-bottom {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.bcard-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.bcard-price {
+  font-size: 1.1rem;
+  font-weight: 800;
+  color: var(--color-primary);
+}
+
+.bcard-created {
+  font-size: 0.75rem;
+  color: var(--color-text-muted);
+}
+
+.bcard-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.bcard-cancel { color: var(--color-danger) !important; }
+.bcard-cancel:hover { background: rgba(239,68,68,0.08) !important; border-color: var(--color-danger) !important; }
+
+.bcard-message {
+  font-size: 0.82rem;
+  color: var(--color-text-muted);
+  font-style: italic;
+  padding-left: 12px;
+  border-left: 2px solid var(--color-border);
+  margin-top: -4px;
+}
+
+/* Filters & section header (shared with MyBookingsPage) */
+.bookings-section-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.summary-pill {
+  display: inline-block;
+  background: #dbeafe;
+  color: #1e3a8a;
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 3px 10px;
+  border-radius: 20px;
+  letter-spacing: 0.04em;
+}
+
+.bookings-filters {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+
+.filter-btn {
+  padding: 5px 16px;
+  border-radius: 20px;
+  border: 1.5px solid var(--color-border);
+  background: transparent;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--color-text-muted);
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.filter-btn:hover  { border-color: var(--color-primary); color: var(--color-primary); }
+.filter-btn.active { background: var(--color-primary); color: #fff; border-color: var(--color-primary); }
+
+/* Active badge animation */
+.badge-active {
+  background: #dbeafe;
+  color: #1e3a8a;
+  animation: badge-pulse 2s ease-in-out infinite;
+}
+@keyframes badge-pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.7; } }
