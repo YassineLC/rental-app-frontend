@@ -10,3 +10,17 @@
 .results-count {
   font-size: 0.875rem;
 }
+
+.pagination-bar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  margin-top: 24px;
+  flex-wrap: wrap;
+}
+
+.pagination-label {
+  font-size: 0.875rem;
+  color: var(--color-text-muted);
+}

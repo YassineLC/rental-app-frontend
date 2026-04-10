@@ -14,7 +14,7 @@ export default function HomePage() {
 
   useEffect(() => {
     propertyService.getAll()
-      .then((data) => setFeatured(data.slice(0, 6)))
+      .then((data) => setFeatured((data.content || data).slice(0, 6)))
       .catch(() => setLoadError('Impossible de charger les logements du moment.'))
       .finally(() => setLoading(false));
   }, []);

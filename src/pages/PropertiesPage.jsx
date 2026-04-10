@@ -10,6 +10,7 @@ export default function PropertiesPage() {
   const [searchParams, setSearchParams] = useSearchParams();
   const [properties, setProperties] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [pageInfo, setPageInfo] = useState({ page: 0, totalPages: 0, totalElements: 0 });
 
   const initialValues = {
     city: searchParams.get('city') || '',
@@ -17,24 +18,41 @@ export default function PropertiesPage() {
     minPrice: searchParams.get('minPrice') || '',
     maxPrice: searchParams.get('maxPrice') || '',
   };
+  const currentPage = Number(searchParams.get('page') || 0);
 
-  const fetchProperties = (params = {}) => {
+  const fetchProperties = (params = {}, page = 0) => {
     setLoading(true);
     const filtered = Object.fromEntries(Object.entries(params).filter(([, v]) => v !== '' && v !== undefined));
-    propertyService.getAll(filtered)
-      .then(setProperties)
-      .catch(() => setProperties([]))
+    propertyService.getAll({ ...filtered, page, size: 12 })
+      .then((data) => {
+        setProperties(data.content || []);
+        setPageInfo({
+          page: data.number || 0,
+          totalPages: data.totalPages || 0,
+          totalElements: data.totalElements || 0,
+        });
+      })
+      .catch(() => {
+        setProperties([]);
+        setPageInfo({ page: 0, totalPages: 0, totalElements: 0 });
+      })
       .finally(() => setLoading(false));
   };
 
   useEffect(() => {
-    fetchProperties(initialValues);
+    fetchProperties(initialValues, currentPage);
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleSearch = (params) => {
     const filtered = Object.fromEntries(Object.entries(params).filter(([, v]) => v !== ''));
-    setSearchParams(filtered);
-    fetchProperties(params);
+    setSearchParams({ ...filtered, page: '0' });
+    fetchProperties(params, 0);
+  };
+
+  const handlePageChange = (nextPage) => {
+    fetchProperties(initialValues, nextPage);
+    const filtered = Object.fromEntries(Object.entries(initialValues).filter(([, v]) => v !== ''));
+    setSearchParams({ ...filtered, page: String(nextPage) });
   };
 
   return (
@@ -59,13 +77,34 @@ export default function PropertiesPage() {
         ) : (
           <>
             <p className="results-count text-muted mb-16">
-              {properties.length} logement{properties.length > 1 ? 's' : ''} trouvé{properties.length > 1 ? 's' : ''}
+              {pageInfo.totalElements} logement{pageInfo.totalElements > 1 ? 's' : ''} trouvé{pageInfo.totalElements > 1 ? 's' : ''}
             </p>
             <div className="properties-grid">
               {properties.map((p) => (
                 <PropertyCard key={p.id} property={p} />
               ))}
             </div>
+            {pageInfo.totalPages > 1 && (
+              <div className="pagination-bar">
+                <button
+                  className="btn btn-ghost"
+                  onClick={() => handlePageChange(Math.max(0, pageInfo.page - 1))}
+                  disabled={pageInfo.page <= 0}
+                >
+                  Précédent
+                </button>
+                <span className="pagination-label">
+                  Page {pageInfo.page + 1} sur {pageInfo.totalPages}
+                </span>
+                <button
+                  className="btn btn-ghost"
+                  onClick={() => handlePageChange(Math.min(pageInfo.totalPages - 1, pageInfo.page + 1))}
+                  disabled={pageInfo.page >= pageInfo.totalPages - 1}
+                >
+                  Suivant
+                </button>
+              </div>
+            )}
           </>
         )}
       </div>
