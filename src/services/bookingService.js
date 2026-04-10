@@ -30,4 +30,9 @@ export const bookingService = {
     const res = await api.put(`/api/bookings/${id}/cancel`);
     return res.data;
   },
+
+  async getUnavailablePeriods(propertyId) {
+    const res = await api.get(`/api/bookings/property/${propertyId}/unavailable`);
+    return res.data;
+  },
 };

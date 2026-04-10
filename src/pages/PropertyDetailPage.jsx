@@ -4,7 +4,10 @@ import { propertyService } from '../services/propertyService';
 import { bookingService } from '../services/bookingService';
 import { useAuth } from '../context/AuthContext';
 import LoadingSpinner from '../components/common/LoadingSpinner';
+import BookingCalendar from '../components/property/BookingCalendar';
 import './PropertyDetailPage.css';
+
+const API_BASE = 'http://localhost:8080';
 
 const TYPE_LABELS = {
   APARTMENT: 'Appartement', HOUSE: 'Maison', STUDIO: 'Studio', VILLA: 'Villa', LOFT: 'Loft',
@@ -17,6 +20,7 @@ export default function PropertyDetailPage() {
 
   const [property, setProperty] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [unavailablePeriods, setUnavailablePeriods] = useState([]);
   const [bookingForm, setBookingForm] = useState({ startDate: '', endDate: '', message: '' });
   const [bookingError, setBookingError] = useState('');
   const [bookingSuccess, setBookingSuccess] = useState('');
@@ -24,9 +28,12 @@ export default function PropertyDetailPage() {
 
   useEffect(() => {
     propertyService.getById(id)
-      .then(setProperty)
+      .then(p => { setProperty(p); return p; })
       .catch(() => navigate('/properties'))
       .finally(() => setLoading(false));
+    bookingService.getUnavailablePeriods(id)
+      .then(setUnavailablePeriods)
+      .catch(() => {});
   }, [id, navigate]);
 
   const handleBookingChange = (e) => {
@@ -88,7 +95,7 @@ export default function PropertyDetailPage() {
             {/* Image */}
             <div className="property-detail-image">
               {property.imageUrl ? (
-                <img src={property.imageUrl} alt={property.title} />
+                <img src={property.imageUrl.startsWith('/api/') ? API_BASE + property.imageUrl : property.imageUrl} alt={property.title} />
               ) : (
                 <div className="property-detail-placeholder">&#8962;</div>
               )}
@@ -161,29 +168,24 @@ export default function PropertyDetailPage() {
                   {bookingSuccess && <div className="alert alert-success">{bookingSuccess}</div>}
 
                   <div className="form-group">
-                    <label className="form-label">Date d'arrivée</label>
-                    <input
-                      type="date"
-                      name="startDate"
-                      className="form-input"
-                      value={bookingForm.startDate}
-                      min={today}
-                      onChange={handleBookingChange}
-                      required
+                    <label className="form-label">Choisissez vos dates</label>
+                    <BookingCalendar
+                      unavailablePeriods={unavailablePeriods}
+                      startDate={bookingForm.startDate}
+                      endDate={bookingForm.endDate}
+                      onChange={({ startDate, endDate }) =>
+                        setBookingForm(f => ({ ...f, startDate, endDate }))
+                      }
                     />
-                  </div>
-
-                  <div className="form-group">
-                    <label className="form-label">Date de départ</label>
-                    <input
-                      type="date"
-                      name="endDate"
-                      className="form-input"
-                      value={bookingForm.endDate}
-                      min={bookingForm.startDate || today}
-                      onChange={handleBookingChange}
-                      required
-                    />
+                    {bookingForm.startDate && (
+                      <div className="booking-dates-summary">
+                        <span>
+                          {new Date(bookingForm.startDate).toLocaleDateString('fr-FR', { day:'2-digit', month:'short' })}
+                          {bookingForm.endDate && ` → ${new Date(bookingForm.endDate).toLocaleDateString('fr-FR', { day:'2-digit', month:'short' })}`}
+                          {!bookingForm.endDate && ' → choisir la date de départ'}
+                        </span>
+                      </div>
+                    )}
                   </div>
 
                   <div className="form-group">
@@ -194,7 +196,7 @@ export default function PropertyDetailPage() {
                       placeholder="Présentez-vous au propriétaire..."
                       value={bookingForm.message}
                       onChange={handleBookingChange}
-                      rows={3}
+                      rows={2}
                     />
                   </div>
 

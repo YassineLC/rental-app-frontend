@@ -99,7 +99,7 @@ export default function AddPropertyPage({ editMode = false, initialData = null, 
                 <div className="form-group">
                   <label className="form-label">Prix / mois (€) *</label>
                   <input name="pricePerMonth" type="number" className="form-input" value={form.pricePerMonth}
-                    onChange={handleChange} placeholder="1200" min="0" required />
+                    onChange={handleChange} placeholder="1200" min="0.01" step="0.01" required />
                 </div>
               </div>
             </div>
@@ -133,7 +133,7 @@ export default function AddPropertyPage({ editMode = false, initialData = null, 
                 <div className="form-group">
                   <label className="form-label">Surface (m²)</label>
                   <input name="surface" type="number" className="form-input" value={form.surface}
-                    onChange={handleChange} placeholder="65" min="0" />
+                    onChange={handleChange} placeholder="65" min="0.01" step="0.01" />
                 </div>
 
                 <div className="form-group">
