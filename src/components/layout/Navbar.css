@@ -27,9 +27,9 @@
   text-decoration: none;
 }
 
-.brand-icon {
-  font-size: 1.3rem;
-  color: var(--color-accent);
+.brand-logo {
+  flex-shrink: 0;
+  border-radius: 6px;
 }
 
 .navbar-links {

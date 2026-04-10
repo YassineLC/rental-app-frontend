@@ -22,7 +22,12 @@ export default function Navbar() {
     <nav className="navbar">
       <div className="container navbar-inner">
         <Link to="/" className="navbar-brand">
-          <span className="brand-icon">&#8962;</span>
+          <svg className="brand-logo" width="30" height="28" viewBox="0 0 30 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M15 2L2 12.5V27h9v-8h8v8h9V12.5L15 2Z" fill="#e55c2f"/>
+            <path d="M15 2L2 12.5" stroke="#0f2b46" strokeWidth="1.5" strokeLinecap="round"/>
+            <path d="M15 2L28 12.5" stroke="#0f2b46" strokeWidth="1.5" strokeLinecap="round"/>
+            <rect x="12" y="19" width="6" height="8" rx="1" fill="#0f2b46" opacity="0.3"/>
+          </svg>
           <span>RentalApp</span>
         </Link>
 

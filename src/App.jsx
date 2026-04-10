@@ -3,6 +3,7 @@ import { AuthProvider } from './context/AuthContext';
 import Navbar from './components/layout/Navbar';
 import ProtectedRoute from './components/common/ProtectedRoute';
 
+import Footer from './components/layout/Footer';
 import HomePage from './pages/HomePage';
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
@@ -61,6 +62,7 @@ export default function App() {
 
           <Route path="*" element={<HomePage />} />
         </Routes>
+        <Footer />
       </AuthProvider>
     </BrowserRouter>
   );
