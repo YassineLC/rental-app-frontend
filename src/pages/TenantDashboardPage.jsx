@@ -6,20 +6,21 @@ import LoadingSpinner from '../components/common/LoadingSpinner';
 import './DashboardPage.css';
 
 const STATUS_CONFIG = {
-  PENDING:   { label: 'En attente',  cls: 'badge-yellow', accent: '#f59e0b' },
-  CONFIRMED: { label: 'Confirmée',   cls: 'badge-green',  accent: '#22c55e' },
-  ACTIVE:    { label: 'En cours',    cls: 'badge-active', accent: '#3b82f6' },
-  COMPLETED: { label: 'Terminée',    cls: 'badge-gray',   accent: '#94a3b8' },
-  CANCELLED: { label: 'Annulée',     cls: 'badge-red',    accent: '#ef4444' },
+  PENDING:   { label: 'En attente',  cls: 'badge-yellow', color: '#f59e0b' },
+  CONFIRMED: { label: 'Confirmée',   cls: 'badge-green',  color: '#22c55e' },
+  ACTIVE:    { label: 'En cours',    cls: 'badge-active', color: '#3b82f6' },
+  COMPLETED: { label: 'Terminée',    cls: 'badge-gray',   color: '#94a3b8' },
+  CANCELLED: { label: 'Annulée',     cls: 'badge-red',    color: '#ef4444' },
 };
 
-function nightCount(start, end) {
-  if (!start || !end) return 0;
-  return Math.max(0, Math.ceil((new Date(end) - new Date(start)) / 86400000));
+function fmtShort(str) {
+  return new Date(str).toLocaleDateString('fr-FR', { day: '2-digit', month: 'short' });
 }
-
-function fmtDate(str) {
-  return new Date(str).toLocaleDateString('fr-FR', { day: '2-digit', month: 'short', year: 'numeric' });
+function fmtFull(str) {
+  return new Date(str).toLocaleDateString('fr-FR', { day: '2-digit', month: 'long', year: 'numeric' });
+}
+function nightCount(start, end) {
+  return Math.max(0, Math.ceil((new Date(end) - new Date(start)) / 86400000));
 }
 
 export default function TenantDashboardPage() {
@@ -51,13 +52,13 @@ export default function TenantDashboardPage() {
     }
   };
 
-  const activeCount  = bookings.filter((b) => ['PENDING', 'CONFIRMED', 'ACTIVE'].includes(b.status)).length;
-  const pendingCount = bookings.filter((b) => b.status === 'PENDING').length;
-  const confirmedCount = bookings.filter((b) => ['CONFIRMED', 'ACTIVE'].includes(b.status)).length;
+  const activeCount   = bookings.filter((b) => ['PENDING','CONFIRMED','ACTIVE'].includes(b.status)).length;
+  const pendingCount  = bookings.filter((b) => b.status === 'PENDING').length;
+  const confirmedCount = bookings.filter((b) => ['CONFIRMED','ACTIVE'].includes(b.status)).length;
 
   const filtered = bookings.filter((b) => {
-    if (filter === 'active') return ['PENDING', 'CONFIRMED', 'ACTIVE'].includes(b.status);
-    if (filter === 'done')   return ['COMPLETED', 'CANCELLED'].includes(b.status);
+    if (filter === 'active') return ['PENDING','CONFIRMED','ACTIVE'].includes(b.status);
+    if (filter === 'done')   return ['COMPLETED','CANCELLED'].includes(b.status);
     return true;
   });
 
@@ -74,7 +75,6 @@ export default function TenantDashboardPage() {
           <Link to="/properties" className="btn btn-primary">Chercher un logement</Link>
         </div>
 
-        {/* Stats */}
         <div className="dashboard-stats">
           <div className="stat-card card">
             <span className="stat-value">{bookings.length}</span>
@@ -97,15 +97,10 @@ export default function TenantDashboardPage() {
           {activeCount > 0 && <span className="summary-pill">{activeCount} en cours</span>}
         </div>
 
-        {/* Filters */}
         {bookings.length > 0 && (
           <div className="bookings-filters">
             {[['all','Toutes'], ['active','En cours'], ['done','Terminées / Annulées']].map(([val, label]) => (
-              <button
-                key={val}
-                className={`filter-btn ${filter === val ? 'active' : ''}`}
-                onClick={() => setFilter(val)}
-              >
+              <button key={val} className={`filter-btn ${filter === val ? 'active' : ''}`} onClick={() => setFilter(val)}>
                 {label}
               </button>
             ))}
@@ -119,77 +114,68 @@ export default function TenantDashboardPage() {
             <Link to="/properties" className="btn btn-primary mt-16">Voir les logements</Link>
           </div>
         ) : (
-          <div className="bookings-list">
+          <div className="tcard-grid">
             {filtered.map((booking) => {
-              const status = STATUS_CONFIG[booking.status] || { label: booking.status, cls: 'badge-gray', accent: '#94a3b8' };
+              const status = STATUS_CONFIG[booking.status] || { label: booking.status, cls: 'badge-gray', color: '#94a3b8' };
               const canCancel = booking.status === 'PENDING' || booking.status === 'CONFIRMED';
               const nights = nightCount(booking.startDate, booking.endDate);
-              const isActive = booking.status === 'ACTIVE';
 
               return (
-                <div
-                  key={booking.id}
-                  className={`booking-card-v2 card ${isActive ? 'booking-card-v2--active' : ''}`}
-                  style={{ '--accent': status.accent }}
-                >
-                  {/* Left accent bar */}
-                  <div className="bcard-accent" />
+                <div key={booking.id} className="tcard card" style={{ '--tcard-color': status.color }}>
+                  {/* Colored top strip */}
+                  <div className="tcard-strip" />
 
-                  <div className="bcard-body">
-                    {/* Top row */}
-                    <div className="bcard-top">
-                      <div className="bcard-property">
-                        <h3 className="bcard-title">{booking.propertyTitle}</h3>
-                        <p className="bcard-city">
-                          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-                          {booking.propertyCity}
-                        </p>
-                      </div>
-                      <span className={`badge ${status.cls}`}>{status.label}</span>
+                  {/* Header */}
+                  <div className="tcard-header">
+                    <div className="tcard-header-left">
+                      <h3 className="tcard-title">{booking.propertyTitle}</h3>
+                      <span className="tcard-city">
+                        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                        {booking.propertyCity}
+                      </span>
                     </div>
-
-                    {/* Date range + nights */}
-                    <div className="bcard-dates">
-                      <div className="bcard-date-block">
-                        <span className="bcard-date-label">Arrivée</span>
-                        <span className="bcard-date-value">{fmtDate(booking.startDate)}</span>
-                      </div>
-                      <div className="bcard-nights">
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
-                        <span>{nights} nuit{nights > 1 ? 's' : ''}</span>
-                      </div>
-                      <div className="bcard-date-block">
-                        <span className="bcard-date-label">Départ</span>
-                        <span className="bcard-date-value">{fmtDate(booking.endDate)}</span>
-                      </div>
-                    </div>
-
-                    {/* Bottom row */}
-                    <div className="bcard-bottom">
-                      <div className="bcard-meta">
-                        <span className="bcard-price">{Number(booking.totalPrice).toLocaleString('fr-FR')} €</span>
-                        <span className="bcard-created">Demande le {fmtDate(booking.createdAt)}</span>
-                      </div>
-                      <div className="bcard-actions">
-                        <Link to={`/properties/${booking.propertyId}`} className="btn btn-ghost btn-sm">
-                          Voir le logement
-                        </Link>
-                        {canCancel && (
-                          <button
-                            className="btn btn-ghost btn-sm bcard-cancel"
-                            onClick={() => handleCancel(booking.id)}
-                            disabled={cancellingId === booking.id}
-                          >
-                            {cancellingId === booking.id ? 'Annulation...' : 'Annuler'}
-                          </button>
-                        )}
-                      </div>
-                    </div>
-
-                    {booking.message && (
-                      <p className="bcard-message">"{booking.message}"</p>
-                    )}
+                    <span className={`badge ${status.cls}`}>{status.label}</span>
                   </div>
+
+                  {/* Date strip */}
+                  <div className="tcard-dates">
+                    <div className="tcard-date">
+                      <span className="tcard-date-lbl">Arrivée</span>
+                      <span className="tcard-date-val">{fmtShort(booking.startDate)}</span>
+                    </div>
+                    <div className="tcard-arrow">
+                      <span className="tcard-nights">{nights}n</span>
+                      <svg width="32" height="8" viewBox="0 0 32 8"><line x1="0" y1="4" x2="28" y2="4" stroke="currentColor" strokeWidth="1.5"/><polyline points="24,1 28,4 24,7" stroke="currentColor" strokeWidth="1.5" fill="none" strokeLinecap="round" strokeLinejoin="round"/></svg>
+                    </div>
+                    <div className="tcard-date tcard-date--right">
+                      <span className="tcard-date-lbl">Départ</span>
+                      <span className="tcard-date-val">{fmtShort(booking.endDate)}</span>
+                    </div>
+                  </div>
+
+                  {/* Footer */}
+                  <div className="tcard-footer">
+                    <div>
+                      <div className="tcard-price">{Number(booking.totalPrice).toLocaleString('fr-FR')} €</div>
+                      <div className="tcard-since">Demande le {fmtShort(booking.createdAt)}</div>
+                    </div>
+                    <div className="tcard-actions">
+                      <Link to={`/properties/${booking.propertyId}`} className="btn btn-ghost btn-sm">Voir</Link>
+                      {canCancel && (
+                        <button
+                          className="btn btn-sm tcard-cancel-btn"
+                          onClick={() => handleCancel(booking.id)}
+                          disabled={cancellingId === booking.id}
+                        >
+                          {cancellingId === booking.id ? '...' : 'Annuler'}
+                        </button>
+                      )}
+                    </div>
+                  </div>
+
+                  {booking.message && (
+                    <p className="tcard-message">"{booking.message}"</p>
+                  )}
                 </div>
               );
             })}
