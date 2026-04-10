@@ -32,7 +32,7 @@ export default function RegisterPage() {
       const user = await register(form);
       navigate(user.role === 'OWNER' ? '/dashboard/owner' : '/dashboard/tenant', { replace: true });
     } catch (err) {
-      setError(err.response?.data?.message || 'Erreur lors de l\'inscription.');
+      setError(err.response?.data?.error || err.response?.data?.message || 'Erreur lors de l\'inscription.');
     } finally {
       setLoading(false);
     }
