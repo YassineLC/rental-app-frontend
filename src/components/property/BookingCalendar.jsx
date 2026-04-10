@@ -48,6 +48,20 @@ export default function BookingCalendar({ unavailablePeriods = [], startDate, en
     return days;
   }, [viewYear, viewMonth, daysInMonth, firstDay]);
 
+  // Once startDate is chosen (and no endDate yet), compute the first unavailable
+  // date that follows startDate. Any date >= that limit is blocked as endDate.
+  const endDateLimit = useMemo(() => {
+    if (!startDate || endDate) return null;
+    const start = parseLocal(startDate);
+    const cur = new Date(start);
+    cur.setDate(cur.getDate() + 1);
+    for (let i = 0; i < 730; i++) {
+      if (isInRange(cur, unavailablePeriods)) return toStr(cur);
+      cur.setDate(cur.getDate() + 1);
+    }
+    return null;
+  }, [startDate, endDate, unavailablePeriods]);
+
   const prevMonth = () => {
     if (viewMonth === 0) { setViewMonth(11); setViewYear(y => y - 1); }
     else setViewMonth(m => m - 1);
@@ -57,34 +71,26 @@ export default function BookingCalendar({ unavailablePeriods = [], startDate, en
     else setViewMonth(m => m + 1);
   };
 
+  const isBlocked = (str) => {
+    if (isInRange(parseLocal(str), unavailablePeriods)) return true;
+    if (endDateLimit && str >= endDateLimit) return true;
+    return false;
+  };
+
   const handleClick = (date) => {
     if (!date) return;
     const str = toStr(date);
     if (date < today) return;
-    if (isInRange(date, unavailablePeriods)) return;
+    if (isBlocked(str)) return;
 
     if (!startDate || (startDate && endDate)) {
-      // Start fresh selection
       onChange({ startDate: str, endDate: '' });
     } else {
-      // Already have startDate, picking endDate
       if (str <= startDate) {
         onChange({ startDate: str, endDate: '' });
-        return;
+      } else {
+        onChange({ startDate, endDate: str });
       }
-      // Check no unavailable days in range
-      const start = parseLocal(startDate);
-      const end = date;
-      let cur = new Date(start);
-      cur.setDate(cur.getDate() + 1);
-      while (cur < end) {
-        if (isInRange(cur, unavailablePeriods)) {
-          onChange({ startDate: str, endDate: '' });
-          return;
-        }
-        cur.setDate(cur.getDate() + 1);
-      }
-      onChange({ startDate, endDate: str });
     }
   };
 
@@ -92,21 +98,21 @@ export default function BookingCalendar({ unavailablePeriods = [], startDate, en
     if (!date) return 'empty';
     const str = toStr(date);
     const isPast = date < today;
-    const isUnavail = isInRange(date, unavailablePeriods);
     const isStart = str === startDate;
     const isEnd = str === endDate;
     const isToday = str === toStr(today);
+    const unavail = isBlocked(str);
 
     let inRange = false;
     if (startDate && endDate) {
       inRange = str > startDate && str < endDate;
-    } else if (startDate && !endDate && hovered) {
-      const h = hovered > startDate ? hovered : null;
-      inRange = h && str > startDate && str < h;
+    } else if (startDate && !endDate && hovered && hovered > startDate) {
+      const withinLimit = !endDateLimit || hovered < endDateLimit;
+      inRange = withinLimit && str > startDate && str < hovered;
     }
 
     if (isPast) return 'past';
-    if (isUnavail) return 'unavailable';
+    if (unavail) return 'unavailable';
     if (isStart) return 'start';
     if (isEnd) return 'end';
     if (inRange) return 'in-range';
@@ -139,10 +145,10 @@ export default function BookingCalendar({ unavailablePeriods = [], startDate, en
               className={`cal-cell ${state}`}
               onClick={() => handleClick(date)}
               onMouseEnter={() => {
-                if (startDate && !endDate) setHovered(str);
+                if (startDate && !endDate && !isBlocked(str)) setHovered(str);
               }}
               onMouseLeave={() => setHovered(null)}
-              title={state === 'unavailable' ? 'Déjà réservé' : undefined}
+              title={state === 'unavailable' ? 'Non disponible' : undefined}
             >
               {date.getDate()}
               {state === 'unavailable' && <span className="cal-unavail-dot" />}
