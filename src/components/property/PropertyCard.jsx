@@ -9,7 +9,7 @@ const TYPE_LABELS = {
   LOFT: 'Loft',
 };
 
-const API_BASE = 'http://localhost:8080';
+const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:8080';
 
 export default function PropertyCard({ property, actions }) {
   const { id, title, city, pricePerMonth, type, surface, rooms, available, imageUrl } = property;

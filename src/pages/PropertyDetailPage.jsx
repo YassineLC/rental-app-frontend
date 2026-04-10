@@ -7,7 +7,7 @@ import LoadingSpinner from '../components/common/LoadingSpinner';
 import BookingCalendar from '../components/property/BookingCalendar';
 import './PropertyDetailPage.css';
 
-const API_BASE = 'http://localhost:8080';
+const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:8080';
 
 const TYPE_LABELS = {
   APARTMENT: 'Appartement', HOUSE: 'Maison', STUDIO: 'Studio', VILLA: 'Villa', LOFT: 'Loft',
