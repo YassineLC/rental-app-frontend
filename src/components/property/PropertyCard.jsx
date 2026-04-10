@@ -9,14 +9,17 @@ const TYPE_LABELS = {
   LOFT: 'Loft',
 };
 
+const API_BASE = 'http://localhost:8080';
+
 export default function PropertyCard({ property, actions }) {
   const { id, title, city, pricePerMonth, type, surface, rooms, available, imageUrl } = property;
+  const resolvedImage = imageUrl?.startsWith('/api/') ? API_BASE + imageUrl : imageUrl;
 
   return (
     <div className="property-card card">
       <div className="property-card-image">
-        {imageUrl ? (
-          <img src={imageUrl} alt={title} />
+        {resolvedImage ? (
+          <img src={resolvedImage} alt={title} />
         ) : (
           <div className="property-card-placeholder">
             <span>&#8962;</span>
