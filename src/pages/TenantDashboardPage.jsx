@@ -134,7 +134,7 @@ export default function TenantDashboardPage() {
           <div className="tcard-grid">
             {filtered.map((booking) => {
               const status = STATUS_CONFIG[booking.status] || { label: booking.status, cls: 'badge-gray', color: '#94a3b8' };
-              const canCancel = booking.status === 'PENDING' || booking.status === 'CONFIRMED';
+              const canCancel = ['PENDING', 'CONFIRMED', 'ACTIVE'].includes(booking.status);
               const canDelete = booking.status === 'CANCELLED';
               const nights = nightCount(booking.startDate, booking.endDate);
 
@@ -181,7 +181,7 @@ export default function TenantDashboardPage() {
                       <Link to={`/properties/${booking.propertyId}`} className="btn btn-ghost btn-sm">Voir</Link>
                       {canCancel && (
                         <button
-                          className="btn btn-sm tcard-cancel-btn"
+                          className="btn btn-cancel btn-sm"
                           onClick={() => handleCancel(booking.id)}
                           disabled={cancellingId === booking.id}
                         >

@@ -295,7 +295,7 @@ export default function OwnerDashboardPage() {
                                     </button>
                                   )}
                                   <button
-                                    className="btn btn-ghost btn-sm bcard-cancel"
+                                    className="btn btn-cancel btn-sm"
                                     onClick={() => handleCancelBooking(booking.id)}
                                     disabled={actionId === booking.id}
                                   >

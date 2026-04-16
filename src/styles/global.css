@@ -131,6 +131,19 @@ button { cursor: pointer; font-family: var(--font); }
 }
 .btn-delete:disabled { opacity: 0.45; cursor: not-allowed; }
 
+.btn-cancel {
+  background: transparent;
+  color: var(--color-text-muted);
+  border: 1.5px solid var(--color-border);
+  font-weight: 600;
+}
+.btn-cancel:not(:disabled):hover {
+  background: var(--color-border-light);
+  color: var(--color-danger);
+  border-color: rgba(192, 57, 43, 0.4);
+}
+.btn-cancel:disabled { opacity: 0.45; cursor: not-allowed; }
+
 .btn-sm { padding: 6px 14px; font-size: 0.8rem; }
 .btn-lg { padding: 13px 28px; font-size: 0.95rem; }
 .btn-full { width: 100%; justify-content: center; }
