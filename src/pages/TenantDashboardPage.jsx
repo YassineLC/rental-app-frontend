@@ -190,7 +190,7 @@ export default function TenantDashboardPage() {
                       )}
                       {canDelete && (
                         <button
-                          className="btn btn-sm tcard-cancel-btn"
+                          className="btn btn-delete btn-sm"
                           onClick={() => handleDelete(booking.id)}
                           disabled={deletingId === booking.id}
                         >

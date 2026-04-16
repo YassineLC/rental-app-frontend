@@ -117,6 +117,20 @@ button { cursor: pointer; font-family: var(--font); }
   background: #a93226;
 }
 
+.btn-delete {
+  background: transparent;
+  color: var(--color-danger);
+  border: 1.5px solid rgba(192, 57, 43, 0.3);
+  font-weight: 600;
+}
+.btn-delete:not(:disabled):hover {
+  background: rgba(192, 57, 43, 0.06);
+  border-color: var(--color-danger);
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(192, 57, 43, 0.12);
+}
+.btn-delete:disabled { opacity: 0.45; cursor: not-allowed; }
+
 .btn-sm { padding: 6px 14px; font-size: 0.8rem; }
 .btn-lg { padding: 13px 28px; font-size: 0.95rem; }
 .btn-full { width: 100%; justify-content: center; }

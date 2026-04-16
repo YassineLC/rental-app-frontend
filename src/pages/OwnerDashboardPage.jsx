@@ -182,7 +182,7 @@ export default function OwnerDashboardPage() {
                     <div className="property-card-actions">
                       <Link to={`/properties/${p.id}`} className="btn btn-ghost btn-sm">Voir</Link>
                       <button
-                        className="btn btn-danger btn-sm"
+                        className="btn btn-delete btn-sm"
                         onClick={() => handleDeleteProperty(p.id)}
                       >
                         Supprimer
@@ -306,7 +306,7 @@ export default function OwnerDashboardPage() {
                               {booking.status === 'CANCELLED' && (
                                 <div className="bcard-owner-actions">
                                   <button
-                                    className="btn btn-ghost btn-sm bcard-cancel"
+                                    className="btn btn-delete btn-sm"
                                     onClick={() => handleDeleteBooking(booking.id)}
                                     disabled={deletingId === booking.id}
                                   >
