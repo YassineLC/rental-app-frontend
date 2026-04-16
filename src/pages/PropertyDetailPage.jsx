@@ -63,6 +63,7 @@ export default function PropertyDetailPage() {
         endDate: bookingForm.endDate,
         message: bookingForm.message,
       });
+      setUnavailablePeriods(prev => [...prev, { startDate: bookingForm.startDate, endDate: bookingForm.endDate }]);
       setBookingSuccess('Réservation envoyée ! Le propriétaire va confirmer votre demande.');
       setBookingForm({ startDate: '', endDate: '', message: '' });
     } catch (err) {

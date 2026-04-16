@@ -35,4 +35,8 @@ export const bookingService = {
     const res = await api.get(`/api/bookings/property/${propertyId}/unavailable`);
     return res.data;
   },
+
+  async delete(id) {
+    await api.delete(`/api/bookings/${id}`);
+  },
 };

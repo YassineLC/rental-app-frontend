@@ -29,6 +29,7 @@ export default function OwnerDashboardPage() {
   const [loading, setLoading] = useState(true);
   const [loadError, setLoadError] = useState('');
   const [actionId, setActionId] = useState(null);
+  const [deletingId, setDeletingId] = useState(null);
   const [error, setError] = useState('');
   const [collapsedGroups, setCollapsedGroups] = useState({});
 
@@ -77,6 +78,20 @@ export default function OwnerDashboardPage() {
       setProperties((prev) => prev.filter((p) => p.id !== id));
     } catch (err) {
       setError(err.response?.data?.message || err.response?.data?.error || 'Impossible de supprimer.');
+    }
+  };
+
+  const handleDeleteBooking = async (id) => {
+    if (!confirm('Supprimer définitivement cette réservation annulée ?')) return;
+    setDeletingId(id);
+    setError('');
+    try {
+      await bookingService.delete(id);
+      setBookings((prev) => prev.filter((b) => b.id !== id));
+    } catch (err) {
+      setError(err.response?.data?.error || 'Impossible de supprimer.');
+    } finally {
+      setDeletingId(null);
     }
   };
 
@@ -285,6 +300,17 @@ export default function OwnerDashboardPage() {
                                     disabled={actionId === booking.id}
                                   >
                                     {booking.status === 'PENDING' ? 'Refuser' : 'Annuler'}
+                                  </button>
+                                </div>
+                              )}
+                              {booking.status === 'CANCELLED' && (
+                                <div className="bcard-owner-actions">
+                                  <button
+                                    className="btn btn-ghost btn-sm bcard-cancel"
+                                    onClick={() => handleDeleteBooking(booking.id)}
+                                    disabled={deletingId === booking.id}
+                                  >
+                                    {deletingId === booking.id ? '...' : 'Supprimer'}
                                   </button>
                                 </div>
                               )}

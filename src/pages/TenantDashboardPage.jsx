@@ -29,6 +29,7 @@ export default function TenantDashboardPage() {
   const [loading, setLoading] = useState(true);
   const [loadError, setLoadError] = useState('');
   const [cancellingId, setCancellingId] = useState(null);
+  const [deletingId, setDeletingId] = useState(null);
   const [error, setError] = useState('');
   const [filter, setFilter] = useState('all');
 
@@ -50,6 +51,20 @@ export default function TenantDashboardPage() {
       setError(err.response?.data?.error || 'Impossible d\'annuler.');
     } finally {
       setCancellingId(null);
+    }
+  };
+
+  const handleDelete = async (id) => {
+    if (!confirm('Supprimer définitivement cette réservation annulée ?')) return;
+    setDeletingId(id);
+    setError('');
+    try {
+      await bookingService.delete(id);
+      setBookings((prev) => prev.filter((b) => b.id !== id));
+    } catch (err) {
+      setError(err.response?.data?.error || 'Impossible de supprimer.');
+    } finally {
+      setDeletingId(null);
     }
   };
 
@@ -120,6 +135,7 @@ export default function TenantDashboardPage() {
             {filtered.map((booking) => {
               const status = STATUS_CONFIG[booking.status] || { label: booking.status, cls: 'badge-gray', color: '#94a3b8' };
               const canCancel = booking.status === 'PENDING' || booking.status === 'CONFIRMED';
+              const canDelete = booking.status === 'CANCELLED';
               const nights = nightCount(booking.startDate, booking.endDate);
 
               return (
@@ -170,6 +186,15 @@ export default function TenantDashboardPage() {
                           disabled={cancellingId === booking.id}
                         >
                           {cancellingId === booking.id ? '...' : 'Annuler'}
+                        </button>
+                      )}
+                      {canDelete && (
+                        <button
+                          className="btn btn-sm tcard-cancel-btn"
+                          onClick={() => handleDelete(booking.id)}
+                          disabled={deletingId === booking.id}
+                        >
+                          {deletingId === booking.id ? '...' : 'Supprimer'}
                         </button>
                       )}
                     </div>
