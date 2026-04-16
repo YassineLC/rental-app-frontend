@@ -7,7 +7,7 @@
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  padding: 40px 0 32px;
+  padding: 28px 0 24px;
   flex-wrap: wrap;
   gap: 16px;
 }
@@ -377,6 +377,94 @@
   animation: badge-pulse 2s ease-in-out infinite;
 }
 @keyframes badge-pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.7; } }
+
+/* ── Property groups (owner bookings tab) ──────────────────── */
+.property-groups {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
+.property-group-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 14px 20px;
+  background: var(--color-bg);
+  border: 1.5px solid var(--color-border);
+  border-radius: var(--radius);
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+  width: 100%;
+  cursor: pointer;
+  text-align: left;
+  transition: border-color 0.15s, background 0.15s;
+}
+.property-group-header:hover {
+  border-color: var(--color-primary);
+  background: #f8f9fb;
+}
+
+.property-group-chevron {
+  color: var(--color-text-muted);
+  transition: transform 0.2s ease;
+  flex-shrink: 0;
+}
+.property-group-chevron.collapsed {
+  transform: rotate(-90deg);
+}
+
+.property-group-info {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.property-group-icon {
+  color: var(--color-primary);
+  flex-shrink: 0;
+}
+
+.property-group-title {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--color-text);
+  margin-bottom: 3px;
+}
+
+.property-group-city {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.78rem;
+  color: var(--color-text-muted);
+}
+
+.property-group-badges {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.property-group-count {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--color-text-muted);
+  background: var(--color-border);
+  padding: 3px 10px;
+  border-radius: 20px;
+}
+
+.property-group-pending {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #92400e;
+  background: #fef3c7;
+  padding: 3px 10px;
+  border-radius: 20px;
+}
 
 /* ── Tenant booking cards ───────────────────────────────────── */
 .tcard-grid {

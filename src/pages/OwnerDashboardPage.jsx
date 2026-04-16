@@ -30,6 +30,10 @@ export default function OwnerDashboardPage() {
   const [loadError, setLoadError] = useState('');
   const [actionId, setActionId] = useState(null);
   const [error, setError] = useState('');
+  const [collapsedGroups, setCollapsedGroups] = useState({});
+
+  const toggleGroup = (propertyId) =>
+    setCollapsedGroups((prev) => ({ ...prev, [propertyId]: !prev[propertyId] }));
 
   useEffect(() => {
     Promise.all([propertyService.getMyProperties(), bookingService.getOwnerRequests()])
@@ -77,6 +81,16 @@ export default function OwnerDashboardPage() {
   };
 
   const pendingCount = bookings.filter((b) => b.status === 'PENDING').length;
+
+  const propertyGroups = Object.values(
+    bookings.reduce((acc, b) => {
+      if (!acc[b.propertyId]) {
+        acc[b.propertyId] = { propertyId: b.propertyId, propertyTitle: b.propertyTitle, propertyCity: b.propertyCity, bookings: [] };
+      }
+      acc[b.propertyId].bookings.push(b);
+      return acc;
+    }, {})
+  );
 
   if (loading) return <LoadingSpinner fullPage />;
 
@@ -174,79 +188,111 @@ export default function OwnerDashboardPage() {
               <p>Vous n'avez pas encore reçu de demandes.</p>
             </div>
           ) : (
-            <div className="owner-bookings-grid">
-              {bookings.map((booking) => {
-                const status = STATUS_CONFIG[booking.status] || { label: booking.status, cls: 'badge-gray', accent: '#94a3b8' };
-                const nights = nightCount(booking.startDate, booking.endDate);
+            <div className="property-groups">
+              {propertyGroups.map((group) => {
+                const pendingInGroup = group.bookings.filter((b) => b.status === 'PENDING').length;
+                const isCollapsed = !!collapsedGroups[group.propertyId];
                 return (
-                  <div
-                    key={booking.id}
-                    className="booking-card-v2 card"
-                    style={{ '--accent': status.accent }}
-                  >
-                    <div className="bcard-accent" />
-                    <div className="bcard-body">
-
-                      {/* Top */}
-                      <div className="bcard-top">
-                        <div className="bcard-property">
-                          <h3 className="bcard-title">{booking.propertyTitle}</h3>
-                          <p className="bcard-city">
-                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-                            {booking.propertyCity}
+                  <div key={group.propertyId} className="property-group">
+                    <button
+                      className="property-group-header"
+                      onClick={() => toggleGroup(group.propertyId)}
+                      aria-expanded={!isCollapsed}
+                    >
+                      <div className="property-group-info">
+                        <svg className="property-group-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                          <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+                          <polyline points="9 22 9 12 15 12 15 22"/>
+                        </svg>
+                        <div>
+                          <h3 className="property-group-title">{group.propertyTitle}</h3>
+                          <p className="property-group-city">
+                            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                            {group.propertyCity}
                           </p>
                         </div>
-                        <span className={`badge ${status.cls}`}>{status.label}</span>
                       </div>
-
-                      {/* Date range */}
-                      <div className="bcard-dates">
-                        <div className="bcard-date-block">
-                          <span className="bcard-date-label">Arrivée</span>
-                          <span className="bcard-date-value">{fmtDate(booking.startDate)}</span>
-                        </div>
-                        <div className="bcard-nights">
-                          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
-                          <span>{nights} nuit{nights > 1 ? 's' : ''}</span>
-                        </div>
-                        <div className="bcard-date-block">
-                          <span className="bcard-date-label">Départ</span>
-                          <span className="bcard-date-value">{fmtDate(booking.endDate)}</span>
-                        </div>
+                      <div className="property-group-badges">
+                        <span className="property-group-count">{group.bookings.length} demande{group.bookings.length > 1 ? 's' : ''}</span>
+                        {pendingInGroup > 0 && (
+                          <span className="property-group-pending">{pendingInGroup} en attente</span>
+                        )}
+                        <svg
+                          className={`property-group-chevron${isCollapsed ? ' collapsed' : ''}`}
+                          width="16" height="16" viewBox="0 0 24 24" fill="none"
+                          stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"
+                        >
+                          <polyline points="6 9 12 15 18 9"/>
+                        </svg>
                       </div>
+                    </button>
 
-                      {/* Price + message */}
-                      <div className="bcard-price-row">
-                        <span className="bcard-price">{Number(booking.totalPrice).toLocaleString('fr-FR')} €</span>
-                        <span className="bcard-created">Demande le {fmtDate(booking.createdAt)}</span>
-                      </div>
-
-                      {booking.message && (
-                        <p className="bcard-message">"{booking.message}"</p>
-                      )}
-
-                      {/* Actions */}
-                      {(booking.status === 'PENDING' || booking.status === 'CONFIRMED') && (
-                        <div className="bcard-owner-actions">
-                          {booking.status === 'PENDING' && (
-                            <button
-                              className="btn btn-primary btn-sm"
-                              onClick={() => handleConfirm(booking.id)}
-                              disabled={actionId === booking.id}
-                            >
-                              {actionId === booking.id ? '...' : 'Confirmer'}
-                            </button>
-                          )}
-                          <button
-                            className="btn btn-ghost btn-sm bcard-cancel"
-                            onClick={() => handleCancelBooking(booking.id)}
-                            disabled={actionId === booking.id}
+                    {!isCollapsed && <div className="owner-bookings-grid">
+                      {group.bookings.map((booking) => {
+                        const status = STATUS_CONFIG[booking.status] || { label: booking.status, cls: 'badge-gray', accent: '#94a3b8' };
+                        const nights = nightCount(booking.startDate, booking.endDate);
+                        return (
+                          <div
+                            key={booking.id}
+                            className="booking-card-v2 card"
+                            style={{ '--accent': status.accent }}
                           >
-                            {booking.status === 'PENDING' ? 'Refuser' : 'Annuler'}
-                          </button>
-                        </div>
-                      )}
-                    </div>
+                            <div className="bcard-accent" />
+                            <div className="bcard-body">
+
+                              <div className="bcard-top">
+                                <span className={`badge ${status.cls}`}>{status.label}</span>
+                                <span className="bcard-created">Demande le {fmtDate(booking.createdAt)}</span>
+                              </div>
+
+                              <div className="bcard-dates">
+                                <div className="bcard-date-block">
+                                  <span className="bcard-date-label">Arrivée</span>
+                                  <span className="bcard-date-value">{fmtDate(booking.startDate)}</span>
+                                </div>
+                                <div className="bcard-nights">
+                                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+                                  <span>{nights} nuit{nights > 1 ? 's' : ''}</span>
+                                </div>
+                                <div className="bcard-date-block">
+                                  <span className="bcard-date-label">Départ</span>
+                                  <span className="bcard-date-value">{fmtDate(booking.endDate)}</span>
+                                </div>
+                              </div>
+
+                              <div className="bcard-price-row">
+                                <span className="bcard-price">{Number(booking.totalPrice).toLocaleString('fr-FR')} €</span>
+                              </div>
+
+                              {booking.message && (
+                                <p className="bcard-message">"{booking.message}"</p>
+                              )}
+
+                              {(booking.status === 'PENDING' || booking.status === 'CONFIRMED') && (
+                                <div className="bcard-owner-actions">
+                                  {booking.status === 'PENDING' && (
+                                    <button
+                                      className="btn btn-primary btn-sm"
+                                      onClick={() => handleConfirm(booking.id)}
+                                      disabled={actionId === booking.id}
+                                    >
+                                      {actionId === booking.id ? '...' : 'Confirmer'}
+                                    </button>
+                                  )}
+                                  <button
+                                    className="btn btn-ghost btn-sm bcard-cancel"
+                                    onClick={() => handleCancelBooking(booking.id)}
+                                    disabled={actionId === booking.id}
+                                  >
+                                    {booking.status === 'PENDING' ? 'Refuser' : 'Annuler'}
+                                  </button>
+                                </div>
+                              )}
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </div>}
                   </div>
                 );
               })}
