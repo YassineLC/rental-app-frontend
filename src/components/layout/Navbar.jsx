@@ -28,7 +28,7 @@ export default function Navbar() {
             <path d="M15 2L28 12.5" stroke="#0f2b46" strokeWidth="1.5" strokeLinecap="round"/>
             <rect x="12" y="19" width="6" height="8" rx="1" fill="#0f2b46" opacity="0.3"/>
           </svg>
-          <span>RentalApp</span>
+          <span>LogementFacile</span>
         </Link>
 
         <div className="navbar-links">

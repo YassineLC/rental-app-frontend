@@ -19,7 +19,7 @@ export default function Footer() {
               <path d="M15 2L28 12.5" stroke="#fff" strokeWidth="1.5" strokeLinecap="round"/>
               <rect x="12" y="19" width="6" height="8" rx="1" fill="#fff" opacity="0.3"/>
             </svg>
-            <span className="footer-brand-name">RentalApp</span>
+            <span className="footer-brand-name">LogementFacile</span>
           </div>
           <p className="footer-tagline">
             La plateforme de location immobilière simple,<br/>sécurisée et transparente.
@@ -69,7 +69,7 @@ export default function Footer() {
       {/* Bottom bar */}
       <div className="footer-bottom">
         <div className="container footer-bottom-inner">
-          <p>© {year} RentalApp. Tous droits réservés.</p>
+          <p>© {year} LogementFacile. Tous droits réservés.</p>
           <p className="footer-legal-note">
             Conforme au RGPD (Règlement UE 2016/679) — Hébergement : France.
           </p>
